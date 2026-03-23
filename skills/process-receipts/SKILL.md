@@ -12,25 +12,34 @@ Extract data from business receipt photos, review them in a verification UI, and
 
 ## Important: Local Execution
 
-All commands in this skill MUST be executed on the user's local Windows machine using desktop automation tools (e.g. Windows-MCP PowerShell, computer tools). Do NOT run commands inside the Cowork VM or sandbox. The verification UI must be accessible from the user's local browser at localhost:3000.
+This plugin requires running a web server on the user's LOCAL Windows machine so the verification UI is accessible in their browser. All commands MUST be executed on the user's local machine using desktop automation tools (Windows-MCP PowerShell, computer/browser tools). Do NOT run commands inside the Cowork VM or sandbox.
 
 ## Step 0 — Start the Verification Server (Always do this first)
 
 Before anything else, start the Express server on the user's LOCAL machine. This ensures localhost:3000 is ready when receipts are processed.
 
-Run these commands on the user's LOCAL machine using desktop PowerShell tools (Windows-MCP PowerShell or equivalent). Do NOT use bash or sandboxed execution:
+**Start the server** using desktop PowerShell tools on the user's LOCAL machine (NOT bash, NOT sandboxed execution):
 
 ```powershell
 cd "${CLAUDE_PLUGIN_ROOT}"
 if (-not (Test-Path "node_modules")) { npm install }
 Start-Process -FilePath "node" -ArgumentList "server/server.js", "--receipts", "<receipts-path>" -WorkingDirectory "${CLAUDE_PLUGIN_ROOT}" -WindowStyle Hidden
 Start-Sleep -Seconds 3
-Start-Process "http://localhost:3000"
 ```
 
 Replace `<receipts-path>` with the user's receipts folder path.
 
-Confirm the server is running by checking http://localhost:3000 is accessible before proceeding.
+**Verify the server is running** by making a request from the user's LOCAL machine:
+
+```powershell
+try { (Invoke-WebRequest -Uri "http://localhost:3000" -UseBasicParsing -TimeoutSec 5).StatusCode } catch { "FAILED: $_" }
+```
+
+If the response is `200`, the server is running. If it fails, check that node is installed and the port is not in use.
+
+**Open the UI in the user's local browser** using desktop browser tools (e.g. navigate to http://localhost:3000 using computer/browser automation). Take a screenshot to visually confirm the Receipt Verification page loaded correctly.
+
+Do NOT proceed to Step 1 until you have confirmed the server is running and the UI is visible in the user's local browser.
 
 ## Setup
 
