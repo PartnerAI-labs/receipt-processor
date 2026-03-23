@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "dev": "node server/server.js",
     "verify": "node server/server.js",
     "upload": "node scripts/upload-to-quickbooks.js"
   },

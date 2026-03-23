@@ -14,17 +14,29 @@ Extract data from business receipt photos, review them in a verification UI, and
 
 All commands in this skill MUST be executed on the user's local Windows machine using desktop automation tools (e.g. Windows-MCP PowerShell, computer tools). Do NOT run commands inside the Cowork VM or sandbox. The verification UI must be accessible from the user's local browser at localhost:3000.
 
+## Step 0 — Start the Verification Server (Always do this first)
+
+Before anything else, start the Express server on the user's LOCAL machine. This ensures localhost:3000 is ready when receipts are processed.
+
+Run these commands on the user's LOCAL machine using desktop PowerShell tools (Windows-MCP PowerShell or equivalent). Do NOT use bash or sandboxed execution:
+
+```powershell
+cd "${CLAUDE_PLUGIN_ROOT}"
+if (-not (Test-Path "node_modules")) { npm install }
+Start-Process -FilePath "node" -ArgumentList "server/server.js", "--receipts", "<receipts-path>" -WorkingDirectory "${CLAUDE_PLUGIN_ROOT}" -WindowStyle Hidden
+Start-Sleep -Seconds 3
+Start-Process "http://localhost:3000"
+```
+
+Replace `<receipts-path>` with the user's receipts folder path.
+
+Confirm the server is running by checking http://localhost:3000 is accessible before proceeding.
+
 ## Setup
 
 Ask the user for their receipts folder path if not already known. Default to `~/receipts/`.
 
 Initialise the folder structure by running the init script at `${CLAUDE_PLUGIN_ROOT}/lib/folders.js` with the receipts path. This creates the required subfolders: `inbox/`, `awaiting-approval/`, `approved/`, `uploaded/`, `needs-attention/`, and `data/`.
-
-Install plugin dependencies if not already present. Run this on the user's LOCAL machine via desktop PowerShell tool:
-
-```powershell
-cd "${CLAUDE_PLUGIN_ROOT}"; if (-not (Test-Path "node_modules")) { npm install }
-```
 
 ## Step 1 — Extract Receipt Data
 
@@ -62,31 +74,15 @@ If VAT amounts are not printed on the receipt but the vendor has a VAT registrat
 **After processing all receipts:**
 Report a summary: number processed, total value, and flag any fields you were uncertain about.
 
-## Step 2 — Launch Verification UI
+## Step 2 — Review Receipts
 
-Start the receipt verification web server on the user's LOCAL Windows machine (not the Cowork VM). The plugin includes an Express server that serves a review UI at http://localhost:3000.
+The verification server is already running from Step 0. Tell the user:
 
-**CRITICAL: All commands below must run on the user's local machine using desktop automation tools (Windows-MCP PowerShell or equivalent). Do NOT use bash, shell, or any sandboxed execution.**
-
-**Install dependencies (if needed) and start the server on the user's LOCAL machine:**
-
-```powershell
-cd "${CLAUDE_PLUGIN_ROOT}"
-if (-not (Test-Path "node_modules")) { npm install }
-Start-Process -NoNewWindow -FilePath "node" -ArgumentList "server/server.js", "--receipts", "<receipts-path>"
-```
-
-Replace `<receipts-path>` with the user's actual receipts folder path.
-
-**Verify the server is running** by opening http://localhost:3000 in the user's local browser using desktop automation tools (e.g. navigate browser to the URL or use `Start-Process "http://localhost:3000"`).
-
-**After the server starts**, tell the user:
-
-> I've processed [N] receipts totalling [amount]. The verification page is open at http://localhost:3000 — review each receipt and approve or reject. Let me know when you're done.
+> I've processed [N] receipts totalling [amount]. The verification page is open at http://localhost:3000. Review each receipt and approve or reject. Let me know when you're done.
 
 Wait for the user to confirm they have finished reviewing.
 
-**When the user is done reviewing**, stop the server on the user's LOCAL machine:
+**When the user is done reviewing**, stop the server on the user's LOCAL machine using desktop PowerShell tools:
 
 ```powershell
 Get-Process -Name "node" -ErrorAction SilentlyContinue | Where-Object { $_.CommandLine -like "*server.js*" } | Stop-Process -Force
