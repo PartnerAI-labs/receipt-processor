@@ -53,40 +53,75 @@ if (-not $gitCheck) {
 }
 ```
 
-**3. Clone or update the plugin repo inside the receipts folder:**
+**3. Create the receipts folder if it doesn't exist:**
 
 ```powershell
 $receiptsPath = "<receipts-path>"
-$pluginDir = "$receiptsPath\.receipt-processor"
 if (-not (Test-Path $receiptsPath)) { New-Item -ItemType Directory -Path $receiptsPath -Force }
-if (Test-Path "$pluginDir\.git") {
-    cd $pluginDir; git pull
-} else {
-    git clone https://github.com/PartnerAI-labs/receipt-processor.git $pluginDir
-}
 ```
 
-**4. Install dependencies:**
+**4. Clone or update the plugin repo (run each command separately to avoid timeouts):**
+
+First check if the repo already exists:
 
 ```powershell
-cd "<receipts-path>\.receipt-processor"
-if (-not (Test-Path "node_modules")) { npm install }
+Test-Path "<receipts-path>\.receipt-processor\.git"
 ```
 
-**5. Initialise the folder structure:**
+If `True`, pull updates:
+
+```powershell
+cd "<receipts-path>\.receipt-processor"; git pull
+```
+
+If `False`, clone (this may take a moment):
+
+```powershell
+git clone https://github.com/PartnerAI-labs/receipt-processor.git "<receipts-path>\.receipt-processor"
+```
+
+Run each command as a separate PowerShell call. Do NOT combine them into one block.
+
+**5. Install dependencies (background process to avoid 60s timeout):**
+
+npm install can exceed the PowerShell timeout. Launch it as a background process and poll for completion:
+
+```powershell
+Start-Process -FilePath "cmd.exe" -ArgumentList "/c cd /d `"<receipts-path>\.receipt-processor`" && npm install" -WindowStyle Hidden
+```
+
+Then poll until `node_modules` appears (check every 5 seconds, up to 120 seconds):
+
+```powershell
+Test-Path "<receipts-path>\.receipt-processor\node_modules"
+```
+
+Wait for `True` before proceeding. After npm install finishes, wait 5 seconds for any child processes to exit:
+
+```powershell
+Start-Sleep -Seconds 5
+```
+
+**6. Clean up any stray node processes from npm install before starting the server:**
+
+```powershell
+Get-CimInstance Win32_Process -Filter "Name='node.exe'" -ErrorAction SilentlyContinue | ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }
+```
+
+**7. Initialise the folder structure:**
 
 ```powershell
 node "<receipts-path>\.receipt-processor\lib\folders.js" init "<receipts-path>"
 ```
 
-**6. Start the Express server:**
+**8. Start the Express server:**
 
 ```powershell
 Start-Process -FilePath "node" -ArgumentList "<receipts-path>\.receipt-processor\server\server.js", "--receipts", "<receipts-path>" -WorkingDirectory "<receipts-path>\.receipt-processor" -WindowStyle Hidden
 Start-Sleep -Seconds 3
 ```
 
-**7. Verify the server is running on the user's local machine:**
+**9. Verify the server is running on the user's local machine:**
 
 ```powershell
 try { (Invoke-WebRequest -Uri "http://localhost:3000" -UseBasicParsing -TimeoutSec 5).StatusCode } catch { "FAILED: $_" }
@@ -94,7 +129,13 @@ try { (Invoke-WebRequest -Uri "http://localhost:3000" -UseBasicParsing -TimeoutS
 
 If the response is `200`, the server is running. If it fails, check the port is not in use and retry.
 
-**8. Open localhost:3000 in Google Chrome on the user's local machine.** Always use Chrome. Use Claude-in-Chrome or Windows-MCP browser tools to navigate to http://localhost:3000. Take a screenshot to confirm the Receipt Verification page loaded successfully.
+**10. Open localhost:3000 in Google Chrome explicitly.** Do NOT use the default browser or "desktop browser tools". Run this exact command:
+
+```powershell
+Start-Process "chrome.exe" -ArgumentList "http://localhost:3000"
+```
+
+Then take a screenshot to confirm the Receipt Verification page loaded successfully in Chrome.
 
 Do NOT proceed to Step 1 until the server is confirmed running and visible in Google Chrome on the user's local machine.
 
@@ -147,7 +188,13 @@ Wait for the user to confirm they have finished reviewing.
 **When the user is done reviewing**, stop the server on the user's LOCAL machine using Windows-MCP PowerShell:
 
 ```powershell
-Get-Process -Name "node" -ErrorAction SilentlyContinue | Where-Object { $_.CommandLine -like "*server.js*" } | Stop-Process -Force
+Get-CimInstance Win32_Process -Filter "Name='node.exe' AND CommandLine LIKE '%server.js%'" -ErrorAction SilentlyContinue | ForEach-Object { Stop-Process -Id $_.ProcessId -Force }
+```
+
+If that stops nothing (no output), fall back to killing all node processes:
+
+```powershell
+Get-Process -Name "node" -ErrorAction SilentlyContinue | Stop-Process -Force
 ```
 
 ## Step 3 — Upload to QuickBooks (Optional)
