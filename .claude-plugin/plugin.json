@@ -1,0 +1,20 @@
+{
+  "name": "receipt-processor",
+  "version": "1.0.0",
+  "description": "Process business receipts — extract data from photos, review and approve via a web UI, then upload to QuickBooks Online. Built for UK sole traders and small businesses.",
+  "author": {
+    "name": "PartnerAI Labs"
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "diff -q \"${CLAUDE_PLUGIN_ROOT}/package.json\" \"${CLAUDE_PLUGIN_DATA}/package.json\" >/dev/null 2>&1 || (cd \"${CLAUDE_PLUGIN_DATA}\" && cp \"${CLAUDE_PLUGIN_ROOT}/package.json\" . && npm install --production) || rm -f \"${CLAUDE_PLUGIN_DATA}/package.json\""
+          }
+        ]
+      }
+    ]
+  }
+}

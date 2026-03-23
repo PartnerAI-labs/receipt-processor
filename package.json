@@ -1,0 +1,16 @@
+{
+  "name": "receipt-processor",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "verify": "node server/server.js",
+    "upload": "node scripts/upload-to-quickbooks.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.27.1",
+    "express": "^4.21.0",
+    "node-quickbooks": "^2.0.0",
+    "open": "^10.0.0",
+    "zod": "^3.25.76"
+  }
+}

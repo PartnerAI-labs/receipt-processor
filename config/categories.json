@@ -1,0 +1,174 @@
+{
+  "categories": [
+    {
+      "name": "Advertising & Marketing",
+      "keywords": ["advertising", "marketing", "advert", "promotion", "google ads", "facebook ads", "meta ads", "instagram", "linkedin ads", "seo", "ppc", "flyer", "leaflet", "billboard", "sponsorship", "campaign", "branding", "mailchimp", "hubspot", "hootsuite", "canva"],
+      "description": "Costs for promoting your business including online ads, print advertising, sponsorship, and marketing campaigns."
+    },
+    {
+      "name": "Bank Charges & Interest",
+      "keywords": ["bank charge", "bank fee", "interest", "overdraft", "transaction fee", "payment processing", "stripe", "paypal", "gocardless", "worldpay", "sumup", "square", "zettle", "barclays", "hsbc", "lloyds", "natwest", "monzo", "starling", "revolut", "tide"],
+      "description": "Fees charged by banks and payment processors, including transaction fees, overdraft interest, and account maintenance charges."
+    },
+    {
+      "name": "Car, Van & Travel",
+      "keywords": ["fuel", "petrol", "diesel", "parking", "congestion charge", "toll", "car wash", "mot", "road tax", "vehicle tax", "mileage", "bp", "shell", "esso", "texaco", "ncp", "apcoa", "ulez"],
+      "description": "Running costs for business vehicles including fuel, parking, tolls, MOT, and road tax. Excludes repairs (see Repairs & Maintenance) and purchase costs (see Motor Vehicle Expenses)."
+    },
+    {
+      "name": "Computer Equipment & Software",
+      "keywords": ["computer", "laptop", "monitor", "keyboard", "mouse", "printer", "scanner", "hard drive", "ssd", "usb", "software", "licence", "license", "saas", "microsoft", "apple", "dell", "lenovo", "hp", "adobe", "slack", "zoom", "google workspace", "dropbox", "github", "aws", "azure", "server", "domain", "hosting", "antivirus", "ram", "gpu"],
+      "description": "Hardware purchases and software subscriptions used for business purposes, including computers, peripherals, SaaS tools, and hosting."
+    },
+    {
+      "name": "Consulting & Professional Fees",
+      "keywords": ["consulting", "consultancy", "solicitor", "lawyer", "legal", "accountant", "accounting", "bookkeeper", "bookkeeping", "audit", "tax advice", "architect", "surveyor", "professional fee", "advisory", "barrister", "notary", "compliance"],
+      "description": "Fees paid to external professionals for advice and services including legal, accounting, tax, and specialist consultancy."
+    },
+    {
+      "name": "Dues & Subscriptions",
+      "keywords": ["subscription", "membership", "dues", "annual fee", "renewal", "professional body", "trade association", "union", "chartered", "institute", "federation", "society", "linkedin premium", "companies house"],
+      "description": "Membership fees and subscriptions to professional bodies, trade associations, and business-related publications."
+    },
+    {
+      "name": "Entertainment",
+      "keywords": ["entertainment", "client entertainment", "hospitality", "corporate event", "tickets", "theatre", "cinema", "concert", "networking event", "business dinner", "gift", "hamper", "flowers"],
+      "description": "Costs of entertaining clients and business contacts. Note: business entertainment is generally not tax-deductible but should still be recorded."
+    },
+    {
+      "name": "General Office Expenses",
+      "keywords": ["office supplies", "office equipment", "desk", "chair", "furniture", "filing cabinet", "whiteboard", "notice board", "shelving", "bin", "lamp", "fan", "heater", "ikea", "argos", "staples", "viking", "ryman"],
+      "description": "General office equipment and supplies not covered by other categories, including furniture, fixtures, and miscellaneous office items."
+    },
+    {
+      "name": "Insurance",
+      "keywords": ["insurance", "indemnity", "professional indemnity", "public liability", "employers liability", "business insurance", "contents insurance", "cyber insurance", "hiscox", "aviva", "axa", "zurich", "allianz", "simply business", "premium", "policy"],
+      "description": "Business insurance premiums including professional indemnity, public liability, employers liability, and contents insurance."
+    },
+    {
+      "name": "Light, Heat & Power",
+      "keywords": ["electricity", "gas", "energy", "power", "utility", "utilities", "water", "rates", "british gas", "edf", "eon", "octopus energy", "ovo", "scottish power", "sse", "bulb", "thames water", "severn trent", "united utilities"],
+      "description": "Energy and utility costs for business premises including electricity, gas, and water bills."
+    },
+    {
+      "name": "Meals & Subsistence",
+      "keywords": ["meal", "lunch", "dinner", "breakfast", "sandwich", "coffee", "food", "drink", "restaurant", "cafe", "canteen", "takeaway", "pret", "costa", "starbucks", "greggs", "mcdonald", "nando", "wagamama", "eat", "itsu", "leon", "deliveroo", "uber eats", "just eat", "subsistence"],
+      "description": "Food and drink expenses incurred while travelling for business or working away from your normal place of work."
+    },
+    {
+      "name": "Office Stationery & Supplies",
+      "keywords": ["stationery", "paper", "pen", "pencil", "envelope", "notebook", "folder", "binder", "stapler", "staples", "paperclip", "post-it", "sticky note", "ink", "toner", "cartridge", "label", "tape", "glue", "scissors", "ryman", "viking", "lyreco"],
+      "description": "Consumable office stationery and supplies including paper, pens, ink cartridges, and other day-to-day office consumables."
+    },
+    {
+      "name": "Postage & Courier",
+      "keywords": ["postage", "stamp", "parcel", "courier", "delivery", "shipping", "freight", "royal mail", "parcelforce", "dpd", "hermes", "evri", "yodel", "fedex", "ups", "dhl", "tnt", "amazon logistics", "recorded delivery", "special delivery", "tracked"],
+      "description": "Costs for sending mail and parcels including postage stamps, courier services, and shipping fees."
+    },
+    {
+      "name": "Premises Costs / Rent",
+      "keywords": ["rent", "lease", "rates", "business rates", "council tax", "service charge", "ground rent", "office space", "coworking", "wework", "regus", "spaces", "iwg", "warehouse", "storage", "unit", "shop", "premises"],
+      "description": "Rent and associated costs for business premises including business rates, service charges, and coworking space fees."
+    },
+    {
+      "name": "Printing & Reproduction",
+      "keywords": ["printing", "print", "photocopying", "photocopy", "copying", "binding", "laminating", "brochure", "business card", "banner", "sign", "vistaprint", "moo", "instantprint", "solopress"],
+      "description": "Costs for printing, photocopying, and reproducing business materials including brochures, business cards, and signage."
+    },
+    {
+      "name": "Repairs & Maintenance",
+      "keywords": ["repair", "maintenance", "service", "fix", "replace", "plumber", "plumbing", "electrician", "electrical", "painter", "decorator", "handyman", "locksmith", "boiler service", "pest control", "window cleaner", "gutter", "roof"],
+      "description": "Costs for repairing and maintaining business premises and equipment, including plumbing, electrical, and general upkeep."
+    },
+    {
+      "name": "Telephone & Internet",
+      "keywords": ["telephone", "phone", "mobile", "broadband", "internet", "wifi", "fibre", "landline", "voip", "vodafone", "ee", "bt", "three", "o2", "sky", "virgin media", "talktalk", "plusnet", "giffgaff", "sim", "data plan", "call charges"],
+      "description": "Telephone and internet costs including mobile phone bills, broadband, landline charges, and VoIP services."
+    },
+    {
+      "name": "Training & Development",
+      "keywords": ["training", "course", "workshop", "seminar", "conference", "cpd", "certification", "exam", "qualification", "e-learning", "udemy", "coursera", "linkedin learning", "skillshare", "webinar", "development"],
+      "description": "Costs for business-related training and professional development including courses, conferences, and certification exams."
+    },
+    {
+      "name": "Travel & Accommodation",
+      "keywords": ["travel", "train", "bus", "flight", "airline", "taxi", "uber", "bolt", "hotel", "accommodation", "airbnb", "booking.com", "expedia", "national rail", "trainline", "easyjet", "ryanair", "british airways", "oyster", "tfl", "contactless", "eurostar", "premier inn", "travelodge", "holiday inn"],
+      "description": "Business travel costs including train fares, flights, taxis, and overnight accommodation when travelling for work."
+    },
+    {
+      "name": "Use of Home as Office",
+      "keywords": ["home office", "working from home", "wfh", "home use", "home allowance", "home proportion", "home broadband", "home electricity", "home heating"],
+      "description": "Proportion of household costs claimed for using part of your home as a business office, including a share of utilities, broadband, and council tax."
+    },
+    {
+      "name": "Uniforms & Protective Clothing",
+      "keywords": ["uniform", "workwear", "protective clothing", "ppe", "safety boots", "hard hat", "hi-vis", "high visibility", "overalls", "gloves", "goggles", "safety glasses", "branded clothing", "embroidery", "screwfix", "toolstation"],
+      "description": "Costs for uniforms, branded workwear, and protective clothing required for business purposes."
+    },
+    {
+      "name": "Cost of Goods Sold",
+      "keywords": ["stock", "inventory", "raw material", "wholesale", "supplier", "goods", "merchandise", "components", "parts", "packaging", "materials", "cost of goods", "cogs", "purchase", "resale"],
+      "description": "Direct costs of goods purchased for resale or raw materials used in manufacturing, including packaging and components."
+    },
+    {
+      "name": "Subcontractor Costs",
+      "keywords": ["subcontractor", "contractor", "freelancer", "freelance", "outsource", "outsourcing", "agency", "temp", "temporary staff", "contract work", "cis", "construction industry scheme"],
+      "description": "Payments to subcontractors and freelancers for work performed on behalf of your business, including CIS-registered workers."
+    },
+    {
+      "name": "Cleaning",
+      "keywords": ["cleaning", "cleaner", "janitorial", "hygiene", "sanitiser", "sanitizer", "disinfectant", "cleaning supplies", "waste disposal", "bin collection", "window cleaning", "carpet cleaning", "deep clean"],
+      "description": "Costs for cleaning business premises including cleaning services, supplies, and waste disposal."
+    },
+    {
+      "name": "Employee Costs",
+      "keywords": ["salary", "wages", "paye", "national insurance", "ni", "pension", "auto enrolment", "bonus", "commission", "payroll", "holiday pay", "sick pay", "maternity", "paternity", "p45", "p60", "p11d", "hmrc"],
+      "description": "Staff-related costs including salaries, wages, employer NI contributions, pension contributions, and statutory pay."
+    },
+    {
+      "name": "Staff Welfare & Training",
+      "keywords": ["staff welfare", "team building", "staff party", "christmas party", "staff lunch", "employee benefit", "wellbeing", "wellness", "gym membership", "health", "first aid", "mental health", "staff training", "induction", "onboarding"],
+      "description": "Costs related to staff welfare and wellbeing including team events, employee benefits, health initiatives, and staff training."
+    },
+    {
+      "name": "Bad Debts",
+      "keywords": ["bad debt", "write off", "write-off", "uncollectable", "uncollectible", "irrecoverable", "debt recovery", "defaulted", "non-payment"],
+      "description": "Amounts owed to your business that are unlikely to be recovered, written off as business expenses."
+    },
+    {
+      "name": "Depreciation",
+      "keywords": ["depreciation", "amortisation", "amortization", "capital allowance", "annual investment allowance", "aia", "writing down allowance", "wda", "asset disposal", "book value"],
+      "description": "The reduction in value of business assets over time, calculated for accounting and tax purposes including capital allowances."
+    },
+    {
+      "name": "Motor Vehicle Expenses",
+      "keywords": ["motor vehicle", "car purchase", "van purchase", "lease car", "vehicle lease", "car finance", "hire purchase", "hp", "pcp", "car insurance", "van insurance", "breakdown cover", "aa", "rac", "green flag", "car service", "tyre", "tire", "exhaust", "brake"],
+      "description": "Costs related to purchasing, leasing, and insuring motor vehicles used for business, plus major repairs and servicing."
+    }
+  ],
+  "vat_rates": {
+    "standard": 20,
+    "reduced": 5,
+    "zero": 0,
+    "exempt": null
+  },
+  "extraction_fields": {
+    "required": [
+      "vendor_name",
+      "date",
+      "gross_amount",
+      "currency"
+    ],
+    "optional": [
+      "vendor_address",
+      "vat_registration_number",
+      "invoice_number",
+      "description",
+      "net_amount",
+      "vat_rate",
+      "vat_amount",
+      "payment_method",
+      "line_items"
+    ]
+  }
+}

@@ -1,0 +1,3 @@
+node_modules/
+config/quickbooks.json
+*.zip
