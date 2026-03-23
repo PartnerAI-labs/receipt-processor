@@ -16,7 +16,7 @@ This plugin runs a web server that must be accessible at localhost:3000. ALL com
 
 ## Step 0 — Environment Setup and Server Start (Always do this first)
 
-Ask the user for their receipts folder path. Default to `$env:USERPROFILE\receipts`.
+Use `$env:USERPROFILE\receipts` as the receipts folder. Do NOT ask the user for the path unless they explicitly provide a different one.
 
 All commands below MUST run on the user's LOCAL Windows machine using Windows-MCP PowerShell.
 
