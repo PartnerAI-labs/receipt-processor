@@ -12,15 +12,48 @@ Extract data from business receipt photos, review them in a verification UI, and
 
 ## Important: Local Execution
 
-This plugin runs a web server that must be accessible in the user's local browser at localhost:3000. All commands MUST run on the user's LOCAL Windows machine using desktop automation tools (Windows-MCP PowerShell, computer/browser tools). Do NOT run commands inside the Cowork VM or sandbox.
+This plugin runs a web server that must be accessible at localhost:3000. ALL commands MUST run on the user's LOCAL Windows machine using Windows-MCP PowerShell. Do NOT run commands inside the Cowork VM or sandbox. Always use Google Chrome as the browser for verification.
 
-## Step 0 — Set Up and Start the Server (Always do this first)
+## Step 0 — Environment Setup and Server Start (Always do this first)
 
 Ask the user for their receipts folder path. Default to `$env:USERPROFILE\receipts`.
 
-The server code lives in the GitHub repo. Clone it into a `.receipt-processor` subfolder inside the user's receipts folder. All commands below must run on the user's LOCAL machine using desktop PowerShell tools.
+All commands below MUST run on the user's LOCAL Windows machine using Windows-MCP PowerShell.
 
-**1. Clone or update the plugin repo inside the receipts folder:**
+**1. Check if Node.js is installed. If not, install it automatically:**
+
+```powershell
+$nodeCheck = Get-Command node -ErrorAction SilentlyContinue
+if (-not $nodeCheck) {
+    Write-Output "Node.js not found. Installing via winget..."
+    winget install OpenJS.NodeJS.LTS --accept-source-agreements --accept-package-agreements
+    # Refresh PATH so node/npm are available in this session
+    $env:PATH = [System.Environment]::GetEnvironmentVariable("PATH", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("PATH", "User")
+    # Verify install succeeded
+    $nodeCheck = Get-Command node -ErrorAction SilentlyContinue
+    if (-not $nodeCheck) {
+        Write-Error "Node.js installation failed. Please install manually from https://nodejs.org"
+        return
+    }
+}
+Write-Output "Node.js version: $(node --version)"
+Write-Output "npm version: $(npm --version)"
+```
+
+If winget is not available, fall back to downloading the Node.js LTS installer from https://nodejs.org and running it silently.
+
+**2. Check if Git is installed. If not, install it automatically:**
+
+```powershell
+$gitCheck = Get-Command git -ErrorAction SilentlyContinue
+if (-not $gitCheck) {
+    Write-Output "Git not found. Installing via winget..."
+    winget install Git.Git --accept-source-agreements --accept-package-agreements
+    $env:PATH = [System.Environment]::GetEnvironmentVariable("PATH", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("PATH", "User")
+}
+```
+
+**3. Clone or update the plugin repo inside the receipts folder:**
 
 ```powershell
 $receiptsPath = "<receipts-path>"
@@ -33,37 +66,37 @@ if (Test-Path "$pluginDir\.git") {
 }
 ```
 
-**2. Install dependencies:**
+**4. Install dependencies:**
 
 ```powershell
 cd "<receipts-path>\.receipt-processor"
 if (-not (Test-Path "node_modules")) { npm install }
 ```
 
-**3. Initialise the folder structure:**
+**5. Initialise the folder structure:**
 
 ```powershell
 node "<receipts-path>\.receipt-processor\lib\folders.js" init "<receipts-path>"
 ```
 
-**4. Start the Express server:**
+**6. Start the Express server:**
 
 ```powershell
 Start-Process -FilePath "node" -ArgumentList "<receipts-path>\.receipt-processor\server\server.js", "--receipts", "<receipts-path>" -WorkingDirectory "<receipts-path>\.receipt-processor" -WindowStyle Hidden
 Start-Sleep -Seconds 3
 ```
 
-**5. Verify the server is running on the user's local machine:**
+**7. Verify the server is running on the user's local machine:**
 
 ```powershell
 try { (Invoke-WebRequest -Uri "http://localhost:3000" -UseBasicParsing -TimeoutSec 5).StatusCode } catch { "FAILED: $_" }
 ```
 
-If the response is `200`, the server is running. If it fails, check that node is installed and the port is not in use.
+If the response is `200`, the server is running. If it fails, check the port is not in use and retry.
 
-**6. Open and verify in the user's local browser.** Navigate to http://localhost:3000 using desktop browser tools. Take a screenshot to confirm the Receipt Verification page loaded.
+**8. Open localhost:3000 in Google Chrome on the user's local machine.** Always use Chrome. Use Claude-in-Chrome or Windows-MCP browser tools to navigate to http://localhost:3000. Take a screenshot to confirm the Receipt Verification page loaded successfully.
 
-Do NOT proceed to Step 1 until the server is confirmed running and visible in the user's local browser.
+Do NOT proceed to Step 1 until the server is confirmed running and visible in Google Chrome on the user's local machine.
 
 ## Step 1 — Extract Receipt Data
 
@@ -103,13 +136,15 @@ Report a summary: number processed, total value, and flag any fields you were un
 
 ## Step 2 — Review Receipts
 
-The verification server is already running from Step 0. Tell the user:
+The verification server is already running from Step 0. Open http://localhost:3000 in Google Chrome using Claude-in-Chrome tools. Take a screenshot to confirm the receipts are loaded in the UI.
 
-> I've processed [N] receipts totalling [amount]. The verification page is open at http://localhost:3000. Review each receipt and approve or reject. Let me know when you're done.
+Tell the user:
+
+> I've processed [N] receipts totalling [amount]. The verification page is open at http://localhost:3000 in Chrome. Review each receipt and approve or reject. Let me know when you're done.
 
 Wait for the user to confirm they have finished reviewing.
 
-**When the user is done reviewing**, stop the server on the user's LOCAL machine using desktop PowerShell tools:
+**When the user is done reviewing**, stop the server on the user's LOCAL machine using Windows-MCP PowerShell:
 
 ```powershell
 Get-Process -Name "node" -ErrorAction SilentlyContinue | Where-Object { $_.CommandLine -like "*server.js*" } | Stop-Process -Force
