@@ -16,12 +16,16 @@ This plugin runs a web server that must be accessible in the user's local browse
 
 ## Step 0 — Set Up and Start the Server (Always do this first)
 
-The server code lives in the GitHub repo. Clone it (or pull latest) into the user's local machine, install dependencies, and start the server. All commands below must run on the user's LOCAL machine using desktop PowerShell tools.
+Ask the user for their receipts folder path. Default to `$env:USERPROFILE\receipts`.
 
-**1. Clone or update the plugin repo on the user's local machine:**
+The server code lives in the GitHub repo. Clone it into a `.receipt-processor` subfolder inside the user's receipts folder. All commands below must run on the user's LOCAL machine using desktop PowerShell tools.
+
+**1. Clone or update the plugin repo inside the receipts folder:**
 
 ```powershell
-$pluginDir = "$env:USERPROFILE\.receipt-processor"
+$receiptsPath = "<receipts-path>"
+$pluginDir = "$receiptsPath\.receipt-processor"
+if (-not (Test-Path $receiptsPath)) { New-Item -ItemType Directory -Path $receiptsPath -Force }
 if (Test-Path "$pluginDir\.git") {
     cd $pluginDir; git pull
 } else {
@@ -32,26 +36,24 @@ if (Test-Path "$pluginDir\.git") {
 **2. Install dependencies:**
 
 ```powershell
-cd "$env:USERPROFILE\.receipt-processor"
+cd "<receipts-path>\.receipt-processor"
 if (-not (Test-Path "node_modules")) { npm install }
 ```
 
-**3. Ask the user for their receipts folder path.** Default to `$env:USERPROFILE\receipts`.
-
-**4. Initialise the folder structure:**
+**3. Initialise the folder structure:**
 
 ```powershell
-node "$env:USERPROFILE\.receipt-processor\lib\folders.js" init "<receipts-path>"
+node "<receipts-path>\.receipt-processor\lib\folders.js" init "<receipts-path>"
 ```
 
-**5. Start the Express server:**
+**4. Start the Express server:**
 
 ```powershell
-Start-Process -FilePath "node" -ArgumentList "$env:USERPROFILE\.receipt-processor\server\server.js", "--receipts", "<receipts-path>" -WorkingDirectory "$env:USERPROFILE\.receipt-processor" -WindowStyle Hidden
+Start-Process -FilePath "node" -ArgumentList "<receipts-path>\.receipt-processor\server\server.js", "--receipts", "<receipts-path>" -WorkingDirectory "<receipts-path>\.receipt-processor" -WindowStyle Hidden
 Start-Sleep -Seconds 3
 ```
 
-**6. Verify the server is running on the user's local machine:**
+**5. Verify the server is running on the user's local machine:**
 
 ```powershell
 try { (Invoke-WebRequest -Uri "http://localhost:3000" -UseBasicParsing -TimeoutSec 5).StatusCode } catch { "FAILED: $_" }
@@ -59,7 +61,7 @@ try { (Invoke-WebRequest -Uri "http://localhost:3000" -UseBasicParsing -TimeoutS
 
 If the response is `200`, the server is running. If it fails, check that node is installed and the port is not in use.
 
-**7. Open and verify in the user's local browser.** Navigate to http://localhost:3000 using desktop browser tools. Take a screenshot to confirm the Receipt Verification page loaded.
+**6. Open and verify in the user's local browser.** Navigate to http://localhost:3000 using desktop browser tools. Take a screenshot to confirm the Receipt Verification page loaded.
 
 Do NOT proceed to Step 1 until the server is confirmed running and visible in the user's local browser.
 
@@ -85,7 +87,7 @@ Read all files from the `inbox/` subfolder of the receipts folder. For each rece
 - `line_items` — array of individual items if listed
 
 **Category assignment:**
-Match each receipt to a category from `$env:USERPROFILE\.receipt-processor\config\categories.json` using the keyword lists and your own judgement about the nature of the expense.
+Match each receipt to a category from `<receipts-path>\.receipt-processor\config\categories.json` using the keyword lists and your own judgement about the nature of the expense.
 
 **VAT calculation:**
 If VAT amounts are not printed on the receipt but the vendor has a VAT registration number, calculate:
@@ -115,14 +117,14 @@ Get-Process -Name "node" -ErrorAction SilentlyContinue | Where-Object { $_.Comma
 
 ## Step 3 — Upload to QuickBooks (Optional)
 
-**Skip this step** if `$env:USERPROFILE\.receipt-processor\config\quickbooks.json` does not exist. Instead, tell the user:
+**Skip this step** if `<receipts-path>\.receipt-processor\config\quickbooks.json` does not exist. Instead, tell the user:
 
 > Your approved receipts are in the `approved/` folder with data in `data/`. To enable QuickBooks upload, copy `config/quickbooks.example.json` to `config/quickbooks.json` and add your OAuth2 credentials (client ID, client secret, realm ID, refresh token, and default account ID).
 
 **If QuickBooks is configured** and the user wants to upload, run the upload script on the user's LOCAL machine:
 
 ```powershell
-cd "$env:USERPROFILE\.receipt-processor"; npm run upload -- --receipts <receipts-path>
+cd "<receipts-path>\.receipt-processor"; npm run upload -- --receipts <receipts-path>
 ```
 
 Report results: how many succeeded, how many failed, and how many need attention.
