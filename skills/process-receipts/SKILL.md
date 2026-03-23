@@ -16,10 +16,10 @@ Ask the user for their receipts folder path if not already known. Default to `~/
 
 Initialise the folder structure by running the init script at `${CLAUDE_PLUGIN_ROOT}/lib/folders.js` with the receipts path. This creates the required subfolders: `inbox/`, `awaiting-approval/`, `approved/`, `uploaded/`, `needs-attention/`, and `data/`.
 
-Install plugin dependencies if not already present:
+Install plugin dependencies if not already present via PowerShell on the user's machine:
 
-```bash
-cd "${CLAUDE_PLUGIN_ROOT}" && npm install
+```powershell
+cd "${CLAUDE_PLUGIN_ROOT}"; if (-not (Test-Path "node_modules")) { npm install }
 ```
 
 ## Step 1 — Extract Receipt Data
@@ -60,13 +60,31 @@ Report a summary: number processed, total value, and flag any fields you were un
 
 ## Step 2 — Launch Verification UI
 
-Use the `start_verification_ui` MCP tool to start the review interface, passing the receipts folder path. This opens a browser at http://localhost:3000 where each receipt can be approved or rejected.
+Start the receipt verification web server on the user's local machine. The plugin includes an Express server that serves a review UI at http://localhost:3000.
 
-Tell the user:
+**Install dependencies (if needed) and start the server:**
+
+Run these commands via PowerShell on the user's machine:
+
+```powershell
+cd "${CLAUDE_PLUGIN_ROOT}"
+if (-not (Test-Path "node_modules")) { npm install }
+Start-Process -NoNewWindow -FilePath "node" -ArgumentList "server/server.js", "--receipts", "<receipts-path>"
+```
+
+Replace `<receipts-path>` with the user's actual receipts folder path.
+
+**After the server starts**, tell the user:
 
 > I've processed [N] receipts totalling [amount]. The verification page is open at http://localhost:3000 — review each receipt and approve or reject. Let me know when you're done.
 
 Wait for the user to confirm they have finished reviewing.
+
+**When the user is done reviewing**, stop the server:
+
+```powershell
+Stop-Process -Name "node" -ErrorAction SilentlyContinue
+```
 
 ## Step 3 — Upload to QuickBooks (Optional)
 
@@ -76,8 +94,8 @@ Wait for the user to confirm they have finished reviewing.
 
 **If QuickBooks is configured** and the user wants to upload, run the upload script:
 
-```bash
-cd "${CLAUDE_PLUGIN_ROOT}" && npm run upload -- --receipts <receipts-path>
+```powershell
+cd "${CLAUDE_PLUGIN_ROOT}"; npm run upload -- --receipts <receipts-path>
 ```
 
 Report results: how many succeeded, how many failed, and how many need attention.
