@@ -10,13 +10,17 @@ Extract data from business receipt photos, review them in a verification UI, and
 - "Review my expenses"
 - "Upload receipts to QuickBooks"
 
+## Important: Local Execution
+
+All commands in this skill MUST be executed on the user's local Windows machine using desktop automation tools (e.g. Windows-MCP PowerShell, computer tools). Do NOT run commands inside the Cowork VM or sandbox. The verification UI must be accessible from the user's local browser at localhost:3000.
+
 ## Setup
 
 Ask the user for their receipts folder path if not already known. Default to `~/receipts/`.
 
 Initialise the folder structure by running the init script at `${CLAUDE_PLUGIN_ROOT}/lib/folders.js` with the receipts path. This creates the required subfolders: `inbox/`, `awaiting-approval/`, `approved/`, `uploaded/`, `needs-attention/`, and `data/`.
 
-Install plugin dependencies if not already present via PowerShell on the user's machine:
+Install plugin dependencies if not already present. Run this on the user's LOCAL machine via desktop PowerShell tool:
 
 ```powershell
 cd "${CLAUDE_PLUGIN_ROOT}"; if (-not (Test-Path "node_modules")) { npm install }
@@ -60,11 +64,11 @@ Report a summary: number processed, total value, and flag any fields you were un
 
 ## Step 2 — Launch Verification UI
 
-Start the receipt verification web server on the user's local machine. The plugin includes an Express server that serves a review UI at http://localhost:3000.
+Start the receipt verification web server on the user's LOCAL Windows machine (not the Cowork VM). The plugin includes an Express server that serves a review UI at http://localhost:3000.
 
-**Install dependencies (if needed) and start the server:**
+**CRITICAL: All commands below must run on the user's local machine using desktop automation tools (Windows-MCP PowerShell or equivalent). Do NOT use bash, shell, or any sandboxed execution.**
 
-Run these commands via PowerShell on the user's machine:
+**Install dependencies (if needed) and start the server on the user's LOCAL machine:**
 
 ```powershell
 cd "${CLAUDE_PLUGIN_ROOT}"
@@ -74,16 +78,18 @@ Start-Process -NoNewWindow -FilePath "node" -ArgumentList "server/server.js", "-
 
 Replace `<receipts-path>` with the user's actual receipts folder path.
 
+**Verify the server is running** by opening http://localhost:3000 in the user's local browser using desktop automation tools (e.g. navigate browser to the URL or use `Start-Process "http://localhost:3000"`).
+
 **After the server starts**, tell the user:
 
 > I've processed [N] receipts totalling [amount]. The verification page is open at http://localhost:3000 — review each receipt and approve or reject. Let me know when you're done.
 
 Wait for the user to confirm they have finished reviewing.
 
-**When the user is done reviewing**, stop the server:
+**When the user is done reviewing**, stop the server on the user's LOCAL machine:
 
 ```powershell
-Stop-Process -Name "node" -ErrorAction SilentlyContinue
+Get-Process -Name "node" -ErrorAction SilentlyContinue | Where-Object { $_.CommandLine -like "*server.js*" } | Stop-Process -Force
 ```
 
 ## Step 3 — Upload to QuickBooks (Optional)
@@ -92,7 +98,7 @@ Stop-Process -Name "node" -ErrorAction SilentlyContinue
 
 > Your approved receipts are in the `approved/` folder with data in `data/`. To enable QuickBooks upload, copy `config/quickbooks.example.json` to `config/quickbooks.json` and add your OAuth2 credentials (client ID, client secret, realm ID, refresh token, and default account ID).
 
-**If QuickBooks is configured** and the user wants to upload, run the upload script:
+**If QuickBooks is configured** and the user wants to upload, run the upload script on the user's LOCAL machine:
 
 ```powershell
 cd "${CLAUDE_PLUGIN_ROOT}"; npm run upload -- --receipts <receipts-path>
