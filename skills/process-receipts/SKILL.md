@@ -16,7 +16,7 @@ This plugin runs a web server that must be accessible at localhost:3000. ALL com
 
 ## Step 0 — Environment Setup and Server Start (Always do this first)
 
-Use `$env:USERPROFILE\receipts` as the receipts folder. Do NOT ask the user for the path unless they explicitly provide a different one.
+Use the current working directory that Cowork is pointed to as the receipts folder. Do NOT ask the user for the path.
 
 All commands below MUST run on the user's LOCAL Windows machine using Windows-MCP PowerShell.
 
